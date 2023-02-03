@@ -22,38 +22,38 @@ class Program
                 case 1:
                     Console.WriteLine("How much would you like to withdrawl from Checking?");
                     c.withdrawl(Convert.ToDouble(Console.ReadLine()));
-              Console.WriteLine("Balance is now "+c.balance);
+              Console.WriteLine("Balance is now "+c.getBalance());
                     break;
 
                 case 2:
                     Console.WriteLine("How much would you like to withdrawl from Savings?");
                     s.withdrawl(Convert.ToDouble(Console.ReadLine()));
-              Console.WriteLine("Balance is now "+s.balance);
+              Console.WriteLine("Balance is now "+s.getBalance());
                     break;
 
                 case 3:
                     Console.WriteLine("How much would you like to deposit into Checking?");
                     c.deposit(Convert.ToDouble(Console.ReadLine()));
-              Console.WriteLine("Doing default deposit, balance is now "+c.balance);
+              Console.WriteLine("Doing default deposit, balance is now "+c.getBalance());
               break;
 
                 case 4:
                     Console.WriteLine("How much would you like to deposit into Savings?");
                     s.deposit(Convert.ToDouble(Console.ReadLine()));
-              Console.WriteLine("Doing savings deposit, balance is now "+s.balance);
+              Console.WriteLine("Doing savings deposit, balance is now "+s.getBalance());
                     break;
 
                 case 5:
-                    Console.WriteLine("Your balance for checking "+c.accountid+" is "+c.balance);
+                    Console.WriteLine("Your balance for checking "+c.getBalance()+" is "+c.getBalance());
                     break;
 
                 case 6:
-                    Console.WriteLine("Your balance for Savings "+s.accountid+" is "+s.balance);
+                    Console.WriteLine("Your balance for Savings "+s.getBalance()+" is "+s.getBalance());
                     break;
 
                 case 7:
                     s.addInterest();
-              Console.WriteLine("Savings instrest added, balance is now "+s.balance);
+              Console.WriteLine("Savings instrest added, balance is now "+s.getBalance());
                     break;
   
 
@@ -66,10 +66,20 @@ class Program
 class Account
 {
     private static int accounts = 10001;
-    public int accountid { get; }
-    public double balance { get; set; }
+    private int accountid;
+    private double balance;
 
-    public Account()
+    public double getBalance(){
+      return(balance);
+    }
+  public double getID(){
+      return(accountid);
+    }
+  public void setBalance(double b){
+    balance = b;
+  }
+  
+  public Account()
     {
         accountid = accounts++;
         balance = 0;
@@ -98,21 +108,21 @@ class Checking : Account
 {
     public Checking(double initalBal)
     {
-        balance = initalBal;
+        setBalance(initalBal);
     }
 
     public Checking()
     {
-        balance = 0;
+        setBalance(0);
     }
 
     public override void withdrawl(double remove)
     {
-        balance = balance - remove;
-        if (balance < 0)
+        setBalance(getBalance()-remove);
+        if (getBalance() < 0)
         {
             Console.WriteLine("Charging an overdraft fee of $20 because account is below $0");
-            balance = balance - 20;
+            setBalance(getBalance()-20);
         }
     }
 }
@@ -122,39 +132,39 @@ class Savings : Account
     int amtDeposits = 0;
     public Savings(double initalBal)
     {
-        balance = initalBal;
+        setBalance(initalBal);
     }
 
     public Savings()
     {
-        balance = 0;
+        setBalance(0);
     }
 
     public override void deposit(double add)
     {
-        balance = balance + add;
+        setBalance(getBalance()+add);
         amtDeposits++;
         Console.WriteLine("This is deposit " + amtDeposits + " to this account");
         if (amtDeposits > 5)
         {
             Console.WriteLine("Charging a fee of $10, deposits over 6");
-            balance = balance - 10;
+            setBalance(getBalance()-10);
         }
     }
 
 
     public override void withdrawl(double remove)
     {
-        balance = balance - remove;
-        if (balance < 500)
+        setBalance(getBalance()-remove);
+        if (getBalance() < 500)
         {
             Console.WriteLine("Charging a fee of $10 because account is below $500");
-            balance = balance - 10;
+            setBalance(getBalance()-10);
         }
     }
     public void addInterest()
     {
-        Console.WriteLine("Customer earned " + balance * 0.015 + " in interest");
-        balance = balance * 1.015;
+        Console.WriteLine("Customer earned " + getBalance() * 0.015 + " in interest");
+        setBalance(getBalance()*1.015);
     }
 }
